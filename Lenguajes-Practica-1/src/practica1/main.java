@@ -82,36 +82,46 @@ public class main {
     }
 
     public static void main(String[] args) {
-        HashMap<String, String> tokens = new HashMap<>();
+        HashMap<String, String> sim_simple = new HashMap<>();
+        HashMap<String, String> sim_simple_rechazado = new HashMap<>();
+        HashMap<String, String> sim_compuesto = new HashMap<>();
         ArrayList<String> reservadas = new ArrayList<>();
-        //lista de tokens con sus lexemas
-        tokens.put("tk_mayor",">");
-        tokens.put("tk_mayor_igual",">=");
-        tokens.put("tk_menor","<");
-        tokens.put("tk_menor_igual","<=");
-        tokens.put("tk_asignacion",":=");
-        tokens.put("tk_sum_asig","+=");
-        tokens.put("tk_res_asig","-=");
-        tokens.put("tk_mul_asig","*=");
-        tokens.put("tk_div_asig","/=");
-        tokens.put("tk_mod_asig","%=");
-        tokens.put("tk_igualdad","==");
-        tokens.put("tk_diferente","!=");
-        tokens.put("tk_incremento","++");
-        tokens.put("tk_decremento","--");
-        tokens.put("tk_llave_izq","{");
-        tokens.put("tk_llave_der","}");
-        tokens.put("tk_par_izq","(");
-        tokens.put("tk_par_der",")");
-        tokens.put("tk_mas","+");
-        tokens.put("tk_menos","-");
-        tokens.put("tk_mul","*");
-        tokens.put("tk_div","/");
-        tokens.put("tk_mod","%");
-        tokens.put("tk_coma",",");
-        tokens.put("tk_puntoycoma",";");
-        tokens.put("tk_dospuntos",":");
-        //fin lista
+        // Lista de simbolos simples válidos
+        sim_simple.put("tk_mayor",">");
+        sim_simple.put("tk_menor","<");
+        sim_simple.put("tk_llave_izq","{");
+        sim_simple.put("tk_llave_der","}");
+        sim_simple.put("tk_par_izq","(");
+        sim_simple.put("tk_par_der",")");
+        sim_simple.put("tk_mas","+");
+        sim_simple.put("tk_menos","-");
+        sim_simple.put("tk_mul","*");
+        sim_simple.put("tk_div","/");
+        sim_simple.put("tk_mod","%");
+        sim_simple.put("tk_coma",",");
+        sim_simple.put("tk_puntoycoma",";");
+        sim_simple.put("tk_dospuntos",":");
+        //
+        
+        //Lista de Simbolos simples invalidos
+        sim_simple_rechazado.put("tk_igual","=");        
+        sim_simple_rechazado.put("tk_admiración","!");
+        //
+        
+        //lista de simbolos compuestos válidos
+        sim_compuesto.put("tk_mayor_igual",">=");
+        sim_compuesto.put("tk_menor_igual","<=");
+        sim_compuesto.put("tk_asignacion",":=");
+        sim_compuesto.put("tk_sum_asig","+=");
+        sim_compuesto.put("tk_res_asig","-=");
+        sim_compuesto.put("tk_mul_asig","*=");
+        sim_compuesto.put("tk_div_asig","/=");
+        sim_compuesto.put("tk_mod_asig","%=");
+        sim_compuesto.put("tk_igualdad","==");
+        sim_compuesto.put("tk_diferente","!=");
+        sim_compuesto.put("tk_incremento","++");
+        sim_compuesto.put("tk_decremento","--");
+        //
 
         //Lista de palabras reservadas
         reservadas.add("function");
