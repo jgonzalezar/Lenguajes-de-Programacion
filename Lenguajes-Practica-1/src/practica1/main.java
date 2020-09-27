@@ -404,22 +404,24 @@ public class main {
         reservadas.add("and");
         reservadas.add("or");
         reservadas.add("not");
+        ArrayList<String> entrada = new ArrayList<>();
+        
         Scanner x = new Scanner(System.in);
-        Object linea = x.nextLine();
+        while(x.hasNextLine()){
+            entrada.add(x.nextLine());
+        }
         int fila = 1;
-        while (linea != null && x.hasNextLine()) {
+        String linea = entrada.remove(0);
+        while (!entrada.isEmpty()) {
             if (!linea.equals("")) {
-                makeToken(linea.toString(), sim_simple, sim_simple_rechazado, sim_compuesto, reservadas,fila);
+                makeToken(linea, sim_simple, sim_simple_rechazado, sim_compuesto, reservadas,fila);
                 //System.out.println("prueba");
-            }else{
-                System.exit(0);
             }
             fila++;
-            if(x.hasNext())linea = x.nextLine();
-
+            linea = entrada.remove(0);
         }
         /*System.out.println(deltaFunction(0,'+',sim_simple,sim_simple_rechazado,sim_compuesto));
-            System.out.println(deltaFunction(5,'+',sim_simple,sim_simple_rechazado,sim_compuesto))*/;
+            System.out.println(deltaFunction(5,'+',sim_simple,sim_simple_rechazado,sim_compuesto))*/
     }
 
 }
