@@ -161,7 +161,7 @@ public class main {
                 retorno = 0;
                 break;
             default:
-            //error
+                //error
 
         }
         return retorno;
@@ -206,10 +206,7 @@ public class main {
                     columna += 4;
                     break;
                 case '#':
-                    i = cadena.length();
-                    break;
-                case '\n':
-                    System.out.println("prueba");
+                    i = cadena.length()-1;
                     break;
                 default:
                     int estado = deltaFunction(0, cadena.charAt(i), sim_simple, sim_simple_rechazado, sim_compuesto);
@@ -218,7 +215,6 @@ public class main {
                             token += cadena.charAt(i);
                             ac = i + 1;
                             while (ac < cadena.length() && (deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 1)) {
-                                System.out.println("prueba1");
                                 token += cadena.charAt(ac);
 
                                 ac++;
@@ -237,7 +233,6 @@ public class main {
                             ac = i + 1;
                             if (deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 3) {
                                 while (ac < cadena.length() && (deltaFunction(estado + 1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 3)) {
-                                    System.out.println("prueba2");
                                     token += cadena.charAt(ac);
                                     ac++;
                                 }
@@ -294,7 +289,6 @@ public class main {
                             token += cadena.charAt(i);
                             ac = i + 1;
                             while (ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 10) {
-                                System.out.println("prueba3");
                                 token += cadena.charAt(ac);
                                 ac++;
                             }
@@ -308,7 +302,6 @@ public class main {
                                     deltaFunction(estado+2, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto);
                                     token += cadena.charAt(ac+1);
                                     while (ac+1 < cadena.length() && deltaFunction(estado+3, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto) == 13) {
-                                        System.out.println("prueba4");
                                         token += cadena.charAt(ac+1);
                                         ac++;
                                     }
@@ -317,12 +310,15 @@ public class main {
 
                                 }
                             }else{
-                                sendError(fila, columna);
+                                if(ac==cadena.length()){
+                                    System.out.println("<tk_num," + token + ","+fila+","+columna+ ">");
+                                    token="";
+                                }else{
+                                    sendError(fila, columna);
+                                }
+
                             }
-                    /*if(ac==cadena.length()){
-                        System.out.println("<tk_num," + token + ">");
-                        token="";
-                    }*/
+
 
                             i = ac ;
                             token = "";
@@ -396,7 +392,7 @@ public class main {
         reservadas.add("return");
         reservadas.add("until");
         reservadas.add("loop");
-        reservadas.add("repeat");
+        reservadas.add("repeat");//duda
         reservadas.add("for");
         reservadas.add("end");
         reservadas.add("next");
@@ -404,24 +400,19 @@ public class main {
         reservadas.add("and");
         reservadas.add("or");
         reservadas.add("not");
-        ArrayList<String> entrada = new ArrayList<>();
-        
         Scanner x = new Scanner(System.in);
-        while(x.hasNextLine()){
-            entrada.add(x.nextLine());
-        }
-        int fila = 1;
-        String linea = entrada.remove(0);
-        while (!entrada.isEmpty()) {
-            if (!linea.equals("")) {
-                makeToken(linea, sim_simple, sim_simple_rechazado, sim_compuesto, reservadas,fila);
-                //System.out.println("prueba");
-            }
+        //Object linea = x.nextLine();
+        //linea != null &&
+        Object linea ="";
+        int fila = 0;
+        while (x.hasNextLine()) {
             fila++;
-            linea = entrada.remove(0);
+            linea = x.nextLine();
+            if (!linea.equals("")) {
+                makeToken(linea.toString(), sim_simple, sim_simple_rechazado, sim_compuesto, reservadas,fila);
+            }
+
         }
-        /*System.out.println(deltaFunction(0,'+',sim_simple,sim_simple_rechazado,sim_compuesto));
-            System.out.println(deltaFunction(5,'+',sim_simple,sim_simple_rechazado,sim_compuesto))*/
     }
 
 }
