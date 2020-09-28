@@ -202,13 +202,18 @@ public class main {
                 case ' ':
                     columna++;
                     break;
-                case '\t':
+                /*case '\t':
                     columna += 4;
                     break;
+                 */
                 case '#':
                     i = cadena.length()-1;
                     break;
                 default:
+                    if(cadena.charAt(i)=='\t' && i<cadena.length()){
+                        i++;
+                        columna+=4;
+                    }
                     int estado = deltaFunction(0, cadena.charAt(i), sim_simple, sim_simple_rechazado, sim_compuesto);
                     switch (estado) {
                         case 1:
@@ -221,8 +226,8 @@ public class main {
                             }
                             i = ac - 1;
                             if (esPalabraReservada(reservadas, token)) {
+                                    System.out.println("<" + token + ","+fila+","+columna+">");
 
-                                System.out.println("<" + token + ","+fila+","+columna+">");
                             } else {
                                 System.out.println("<id," + token + ","+fila+","+columna+">");
                             }
@@ -288,39 +293,78 @@ public class main {
                         case 10:
                             token += cadena.charAt(i);
                             ac = i + 1;
-                            while (ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 10) {
-                                token += cadena.charAt(ac);
-                                ac++;
-                            }
-                            if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 11){
+                            if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 10){
+                                while (ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 10) {
+                                    token += cadena.charAt(ac);
+                                    ac++;
+                                }
+                                if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 11){
+                                    deltaFunction(estado+1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
+                                    System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                    ac--;
+                                    i=ac;
+                                }else if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 12){
+                                    token += cadena.charAt(ac);
+                                    //ac--; error .
+                                    if(ac+1 < cadena.length() && deltaFunction(estado+2, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto) == 13){
+                                        deltaFunction(estado+2, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto);
+                                        token += cadena.charAt(ac+1);
+                                        while (ac+2 < cadena.length() && deltaFunction(estado+3, cadena.charAt(ac+2), sim_simple, sim_simple_rechazado, sim_compuesto) == 13) {
+                                            token += cadena.charAt(ac+2);
+                                            ac++;
+                                        }
+                                        deltaFunction(estado+4, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
+                                        System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                        i=ac+1;
+                                    }
+                                }else{
+                                    System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                    //sendError(fila,columna+1);
+                                    i=ac-1;
+                                }
+
+
+                            }else if(ac == cadena.length()){
+                                System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+
+                            }else if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 11){
                                 deltaFunction(estado+1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
                                 System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
                                 ac--;
+                                i=ac;
                             }else if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 12){
                                 token += cadena.charAt(ac);
-                                if(ac < cadena.length() && deltaFunction(estado+2, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto) == 13){
+                                //ac--; error .
+                                if(ac+1 < cadena.length() && deltaFunction(estado+2, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto) == 13){
                                     deltaFunction(estado+2, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto);
                                     token += cadena.charAt(ac+1);
-                                    while (ac+1 < cadena.length() && deltaFunction(estado+3, cadena.charAt(ac+1), sim_simple, sim_simple_rechazado, sim_compuesto) == 13) {
-                                        token += cadena.charAt(ac+1);
+                                    while (ac+2 < cadena.length() && deltaFunction(estado+3, cadena.charAt(ac+2), sim_simple, sim_simple_rechazado, sim_compuesto) == 13) {
+                                        token += cadena.charAt(ac+2);
                                         ac++;
                                     }
                                     deltaFunction(estado+4, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
+                                    if(cadena.charAt(columna-1) == '\t'){
+                                        System.out.println("<" + token + ","+fila+","+(columna+4)+">");
+                                    }
                                     System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
-
+                                    i=ac+1;
+                                }else{
+                                    sendError(fila,columna+1);
                                 }
+                                //i = ac;
                             }else{
-                                if(ac==cadena.length()){
+                                sendError(fila, columna-1);
+                                /*if(ac==cadena.length()){
                                     System.out.println("<tk_num," + token + ","+fila+","+columna+ ">");
                                     token="";
-                                }else{
-                                    sendError(fila, columna);
-                                }
+                                }else{*/
+
+                                //}
 
                             }
 
 
-                            i = ac ;
+                            //i = ac+1;
                             token = "";
                             break;
                         default:
