@@ -6,11 +6,16 @@
 package practica1;
 
 import java.util.*;
+/*Practica 1 Lenguajes de programación
+ * Juan Camilo Acosta Rojas
+ * uan Andres Gonzales Arias*/
+
 
 public class main {
 
     private static String lexema = "";
-
+    private static Boolean hayTab = false;
+    private static int colAgregadas = 0;
   /*
     public class Token{
         public int fila;
@@ -33,7 +38,7 @@ public class main {
     }
 
     public static boolean esLetra(char x) {
-        if (((int) x >= 97 && (int) x <= 122) || ((int) x >=65 && (int) x <= 90)) {
+        if (((int) x >= 97 && (int) x <= 122) || ((int) x >=65 && (int) x <= 90) || x=='_') {
             return true;
         }
         return false;
@@ -178,7 +183,7 @@ public class main {
     }
 
     public static void sendError(int fila, int col) {
-        System.out.println(">>>Error léxico(linea:" + fila + ",posición:" + col+")");
+        System.out.println(">>> Error léxico(línea:" + fila + ",posición:" + col+")");
         System.exit(0);
     }
 
@@ -212,8 +217,20 @@ public class main {
                 default:
                     if(cadena.charAt(i)=='\t' && i<cadena.length()){
                         i++;
-                        columna+=4;
+                        //hayTab = true;
+                        colAgregadas+=4;
+                        //columna+=4;
                     }
+                    if(i==cadena.length()){
+                        //columna+=4;
+                        colAgregadas = 0;
+                        return;
+                    }
+                    if(cadena.charAt(0)=='\t' && i>=12){
+                        colAgregadas = 0;
+                        colAgregadas+=3;
+                    }
+
                     int estado = deltaFunction(0, cadena.charAt(i), sim_simple, sim_simple_rechazado, sim_compuesto);
                     switch (estado) {
                         case 1:
@@ -226,23 +243,29 @@ public class main {
                             }
                             i = ac - 1;
                             if (esPalabraReservada(reservadas, token)) {
-                                    System.out.println("<" + token + ","+fila+","+columna+">");
+                                System.out.println("<" + token + ","+fila+","+(columna+colAgregadas)+">");
+
+
 
                             } else {
-                                System.out.println("<id," + token + ","+fila+","+columna+">");
+                                System.out.println("<id," + token + ","+fila+","+(columna+colAgregadas)+">");
+                                token = "";
                             }
                             token = "";
                             break;
                         case 2:
                             token += cadena.charAt(i);
                             ac = i + 1;
+                            if(ac==cadena.length()){
+                                sendError(fila,columna);
+                            }
                             if (deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 3) {
                                 while (ac < cadena.length() && (deltaFunction(estado + 1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 3)) {
                                     token += cadena.charAt(ac);
                                     ac++;
                                 }
                                 i = ac - 1;
-                                System.out.println("<fid," + token +","+fila+","+columna+ ">");
+                                System.out.println("<fid," + token +","+fila+","+(columna+colAgregadas)+ ">");
                                 token = "";
                             } else {
                                 sendError(fila, columna);
@@ -255,12 +278,12 @@ public class main {
                             if (ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 6) {
                                 token += cadena.charAt(ac);
                                 deltaFunction(estado+1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                System.out.println("<" + getKey(sim_compuesto, token) +","+fila+","+columna+ ">");
+                                System.out.println("<" + getKey(sim_compuesto, token) +","+fila+","+(columna+colAgregadas)+ ">");
                                 //System.out.println("lexema"+lexema);
 
                             }else if (ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 7) {
                                 deltaFunction(estado+2, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                System.out.println("<" + getKey(sim_simple, token) +","+fila+","+columna+ ">");
+                                System.out.println("<" + getKey(sim_simple, token) +","+fila+","+(columna+colAgregadas)+ ">");
                                 //System.out.println("lexema"+lexema);
                                 ac--;
                                 token="";
@@ -268,7 +291,7 @@ public class main {
                             }else if(ac== cadena.length()){
                                 deltaFunction(estado+2, cadena.charAt(ac-1), sim_simple, sim_simple_rechazado, sim_compuesto);
                                 //System.out.println(token);
-                                System.out.println("<" + getKey(sim_simple, token) + ","+fila+","+columna+">");
+                                System.out.println("<" + getKey(sim_simple, token) + ","+fila+","+(columna+colAgregadas)+">");
                                 //System.out.println("lexema"+lexema);
                                 i= ac;
                             }else{
@@ -283,7 +306,7 @@ public class main {
                             if (ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 9) {
                                 token += cadena.charAt(ac);
                                 deltaFunction(estado+1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                System.out.println("<" + getKey(sim_compuesto, token) +","+fila+","+columna+ ">");
+                                System.out.println("<" + getKey(sim_compuesto, token) +","+fila+","+(columna+colAgregadas)+ ">");
                             }else{
                                 sendError(fila, columna);
                             }
@@ -300,7 +323,7 @@ public class main {
                                 }
                                 if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 11){
                                     deltaFunction(estado+1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                    System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                    System.out.println("<tk_num," + token +","+fila+","+(columna+colAgregadas)+ ">");
                                     ac--;
                                     i=ac;
                                 }else if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 12){
@@ -314,22 +337,22 @@ public class main {
                                             ac++;
                                         }
                                         deltaFunction(estado+4, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                        System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                        System.out.println("<tk_num," + token +","+fila+","+(columna+colAgregadas)+ ">");
                                         i=ac+1;
                                     }
                                 }else{
-                                    System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                    System.out.println("<tk_num," + token +","+fila+","+(columna+colAgregadas)+ ">");
                                     //sendError(fila,columna+1);
                                     i=ac-1;
                                 }
 
 
                             }else if(ac == cadena.length()){
-                                System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                System.out.println("<tk_num," + token +","+fila+","+(columna+colAgregadas)+ ">");
 
                             }else if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 11){
                                 deltaFunction(estado+1, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                System.out.println("<tk_num," + token +","+fila+","+(columna+colAgregadas)+ ">");
                                 ac--;
                                 i=ac;
                             }else if(ac < cadena.length() && deltaFunction(estado, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto) == 12){
@@ -343,10 +366,7 @@ public class main {
                                         ac++;
                                     }
                                     deltaFunction(estado+4, cadena.charAt(ac), sim_simple, sim_simple_rechazado, sim_compuesto);
-                                    if(cadena.charAt(columna-1) == '\t'){
-                                        System.out.println("<" + token + ","+fila+","+(columna+4)+">");
-                                    }
-                                    System.out.println("<tk_num," + token +","+fila+","+columna+ ">");
+                                    System.out.println("<tk_num," + token +","+fila+","+(columna+colAgregadas)+ ">");
                                     i=ac+1;
                                 }else{
                                     sendError(fila,columna+1);
@@ -372,9 +392,12 @@ public class main {
 
                     }
                     token="";
+
             }
 
         }
+        hayTab= false;
+        colAgregadas = 0;
     }
 
     public static void main(String[] args) {
@@ -431,6 +454,7 @@ public class main {
         reservadas.add("when");
         reservadas.add("do");
         reservadas.add("if");
+        reservadas.add("else");
         reservadas.add("unless");
         reservadas.add("while");
         reservadas.add("return");
