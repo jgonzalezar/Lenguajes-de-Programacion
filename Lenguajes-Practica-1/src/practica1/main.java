@@ -11,7 +11,7 @@ import java.util.*;
  * uan Andres Gonzales Arias*/
 
 
-public class Main {
+public class main {
 
     private static String lexema = "";
     private static int colAgregadas = 0;
@@ -180,12 +180,7 @@ public class Main {
             columna= i+1;
             switch(cadena.charAt(i)){
                 case ' ':
-                    columna++;
                     break;
-                /*case '\t':
-                    columna += 4;
-                    break;
-                 */
                 case '#':
                     i = cadena.length()-1;
                     break;
@@ -198,7 +193,7 @@ public class Main {
                         colAgregadas = 0;
                         return;
                     }
-                    if(cadena.charAt(0)=='\t' && i>=12){ // machetazo
+                    if(cadena.charAt(0)=='\t' && i>1){ // machetazo && i>=12
                         colAgregadas = 0;
                         colAgregadas+=3;
                     }
